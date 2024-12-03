@@ -1,0 +1,101 @@
+<div class="container">
+  <h1>Books Management</h1>
+
+  <!-- Formulario para agregar un libro -->
+  <mat-card class="form-card">
+    <h2>Add a New Book</h2>
+    <form (ngSubmit)="createBook()">
+      <div class="form-fields">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="newBook.title" name="title" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Author</mat-label>
+          <input matInput [(ngModel)]="newBook.author" name="author" required />
+        </mat-form-field>
+
+        <div class="checkbox-container">
+          <mat-checkbox [(ngModel)]="newBook.read" name="read">Read?</mat-checkbox>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">Add Book</button>
+      </div>
+    </form>
+  </mat-card>
+
+  <!-- Tabla para mostrar los libros -->
+  <mat-card class="table-card">
+    <h2>Book List</h2>
+    <mat-table [dataSource]="books" class="mat-elevation-z8">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+        <mat-cell *matCellDef="let book"> {{ book.id }} </mat-cell>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+        <mat-cell *matCellDef="let book"> {{ book.title }} </mat-cell>
+      </ng-container>
+
+      <!-- Author Column -->
+      <ng-container matColumnDef="author">
+        <mat-header-cell *matHeaderCellDef> Author </mat-header-cell>
+        <mat-cell *matCellDef="let book"> {{ book.author }} </mat-cell>
+      </ng-container>
+
+      <!-- Read Column -->
+      <ng-container matColumnDef="read">
+        <mat-header-cell *matHeaderCellDef> Read </mat-header-cell>
+        <mat-cell *matCellDef="let book">
+          <mat-icon *ngIf="book.read" color="primary">check_circle</mat-icon>
+          <mat-icon *ngIf="!book.read" color="warn">cancel</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> Actions </mat-header-cell>
+        <mat-cell *matCellDef="let book">
+          <button mat-icon-button color="accent" (click)="updateBook(book.id, book)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteBook(book.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Header Row -->
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <!-- Data Rows -->
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-card>
+
+  <ng-template #dialogTemplate let-data let-dialogRef="dialogRef">
+    <h1 mat-dialog-title>Edit Book</h1>
+    <div mat-dialog-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="data.title" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Author</mat-label>
+        <input matInput [(ngModel)]="data.author" />
+      </mat-form-field>
+
+      <mat-checkbox [(ngModel)]="data.read">Read?</mat-checkbox>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="dialogRef.close()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="dialogRef.close(data)">Save</button>
+    </div>
+  </ng-template>
+</div>
